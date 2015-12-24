@@ -47,7 +47,6 @@ public class ylServlet extends HttpServlet {
 		// TODO 自动生成的方法存根
 		JSONObject params = (JSONObject) JSONObject.parse(request.getParameter("params"));
 		JSONObject orderData = params.getJSONObject("orderdata");
-		System.out.println("123");
 		Connection conn = Util.getConnection(DATABASE);
 		try {
 			conn.setAutoCommit(false);

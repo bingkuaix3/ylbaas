@@ -1,5 +1,6 @@
 package com.justep.weixin.mp;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.WxMpServiceImpl;
+import me.chanjar.weixin.mp.bean.WxMpCustomMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutTextMessage;
@@ -188,6 +190,38 @@ public class WxMpServiceInstance {
 				response.getWriter().write(outMessage.toEncryptedXml(wxMpConfigStorage));
 			}
 			return;
+		}
+	}
+	public void downloadimg(String picture_media_id){
+		File picturefile = null;
+		try {
+			picturefile = wxMpService.mediaDownload(picture_media_id);
+		} catch (WxErrorException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		String newpath = "E:/WeX5_V3.2.1/apache-tomcat/webapps/img/";
+		File fnewpath = new File(newpath);
+		if (!fnewpath.exists()) {
+			fnewpath.mkdirs();
+		}
+		File newfile = new File(newpath + picture_media_id + ".jpg");
+		picturefile.renameTo(newfile);		
+	}
+
+	public void customMessageSend(String doctors_recommend,String price,String doctors_analysis,String userid) {
+		// TODO 自动生成的方法存根
+		WxMpCustomMessage.WxArticle article = new WxMpCustomMessage.WxArticle();
+		article.setUrl("www.baidu.com");
+		article.setPicUrl("http://bingkuaix3.imwork.net/a/1.jpg");
+		article.setDescription(doctors_recommend+"共计："+price);
+		article.setTitle(doctors_analysis);
+		WxMpCustomMessage message = WxMpCustomMessage.NEWS().toUser(userid).addArticle(article).build();
+		try {
+			wxMpService.customMessageSend(message);
+		} catch (WxErrorException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
 		}
 	}
 }
